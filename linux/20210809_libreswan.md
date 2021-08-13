@@ -1,4 +1,9 @@
+---
+title:CentOS8でLibreSwanのサンプル
+---
+
 # CentOS8でLibreSwanのサンプル
+
 
 ## 参考にしたもの
 - 技術メモの壁
@@ -26,7 +31,8 @@
   # 実際の例
   ipsec newhostkey
   > Generated RSA key pair with CKAID (...) was stored in the NSS database
-  > The public key can be displayed using: ipsec showhostkey --left --ckaid (...)```
+  > The public key can be displayed using: ipsec showhostkey --left --ckaid (...)
+  ```
 
 - leftとかrightとか
 
