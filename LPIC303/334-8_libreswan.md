@@ -13,6 +13,17 @@ title:CentOS8でLibreSwanのサンプル
 
   https://access.redhat.com/documentation/ja-jp/red_hat_enterprise_linux/8/html/securing_networks/configuring-a-vpn-with-ipsec_securing-networks#creating-a-host-to-host-vpn_configuring-a-vpn-with-ipsec
 
+
+## CentOS8 の場合
+
+- インストール
+  
+  ```
+  sudo vi /etc/sysctl.conf
+  > net.ipv4.ip_forward=1
+  sudo dnf install libreswan
+  ```
+
 ## 引っかかりどころ
 
 
