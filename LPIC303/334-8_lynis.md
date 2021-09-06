@@ -6,7 +6,7 @@ title:334-lynis
 ## lynis
 
 
-### Ubuntu1の場合
+### Ubuntuの場合
 
 - インストール
   ```
