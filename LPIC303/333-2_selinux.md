@@ -11,11 +11,46 @@ title:333-SELinux
   (Mastering Linux Security and Hardening)
 - Ubuntu20.04 では少し具合が悪い(仮想マシン上でインストール再起動すると高確率でフリーズする)
 
+
+## Ubuntu 20.04 の場合
+
+※Ubuntuの場合、唐突にenforcing にすると詰むのでpermissive で色々試しましょう
+
+- インストール
+
+  ```
+  # apparmor を完全削除 、して再起動
+  sudo systemctl stop apparmor
+  sudo apt remove apparmor -y
+  sudo reboot
+  # auditdをインストール
+  sudo apt install auditd  # audit2why他でお世話になるので
+  # selinux一式をインストール
+  sudo apt install selinux-basics selinux-policy-default selinux-utils setools selinux-policy-src
+  sudo selinux-activate
+  sudo reboot
+
+  # 状態を確認
+  sestatus  # permissive が返る...はず
+  sudo ls -l /var/log/audit # audit.log が出力されている
+
+  # ポリシ不一致で大量にエラーが出るのでとりあえず黙らせる
+  sudo audit2allow -M somepolicy < /var/log/audit/audit.log
+  sudo semodule -i somepolicy.pp  # ポリシ反映
+  sudo reboot
+  ```
+
+
+
 ## CentOS 8.x の場合
 
 - インストール
 
    標準でインストール済み
+
+
+
+## 各種コマンド
 
 - 状態確認
 
@@ -27,6 +62,7 @@ title:333-SELinux
   # selinux の統計を出力
   seinfo
   ```
+
 
 - モード変更
   ```
@@ -64,7 +100,7 @@ title:333-SELinux
   getsebool [指定パラメタ] # 指定のパラメタに対するブール値を表示
   # ブール値を変更
   setsebool [指定パラメタ] {on|off} 
-  togglesebool # ON|OFFの切り替え、存在しない可能性有
+  togglesebool # ON|OFFの切り替え
   ```
 
 - ポリシ解析等

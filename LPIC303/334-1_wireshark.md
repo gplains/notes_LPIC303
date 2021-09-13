@@ -9,11 +9,15 @@ title:334-wireshark/tshark
 - GUIがwireshark、CUIがtshark
 - フィルタ定義は同じ
 
-### Ubuntu 18.04の場合
+### Ubuntu 18.04/20.04の場合
 
 - インストール
   ```
-  sudo apt install wireshark  # tsharkのみの導入は不可
+  # 20.04の場合はtsharkのみのインストールが可能
+  sudo apt install wireshark-common tshark
+
+  # 18.04の場合はtsharkのみのインストールが不可
+  sudo apt install wireshark
   ```
 
 ### RHEL/CentOSの場合

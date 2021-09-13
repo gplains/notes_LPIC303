@@ -9,11 +9,28 @@ title:334-snort
 
  -  snort3.0系はコンフィグの保存場所を含めほぼ別物
 
-### Ubuntu18.04の場合
+### Ubuntu18.04/20.04の場合
 
 - インストール
+
+  パッケージのインストール中に「監視するNICの指定」を求められる
   ```
+  # 予めどのNICが存在するか目を通しておく
+  ip a 
+  # apt一発
   sudo apt install snort 
+  # バージョン確認
+  sudo snort -V # 20.04では2.9.7が返る
+  ```
+
+- 使用
+  
+  ```
+  # 受信したパケットを/tmp/test.(タイムスタンプ) に格納する
+  sudo snort -v -L /tmp/test
+
+  # 採取したトラヒックログは tshark等で解析できる
+  sudo tshark -r /tmp/test.(タイムスタンプ)
   ```
 
 ### CentOS7の場合
