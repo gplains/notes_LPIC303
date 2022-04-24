@@ -20,6 +20,64 @@ title:RHEL8の初期設定とチェックリスト
   
   仮想マシンの場合、 minimal + 標準 + ゲストエージェント の組み合わせが最低限必要(業務で使う場合)
 
+### 実際
+
+
+- 言語とロケーション 日本語
+
+
+- システム > インストール先　
+
+　ストレージ設定のカスタマイズ
+
+  標準パーティション
+  - /boot/efi 1GB
+  - swap 8GB
+  - / 残り全部
+
+- システム > ネットワークとホスト名
+
+  ホスト名 任意
+
+  対象NICを有効化 DHCPのときIP払い出し
+
+- Software > Connect to Red Hat
+
+  Red Hatへの接続
+
+  Authentication Method
+
+  - アカウント認証:カスタマポータルのユーザ名、パスワード
+
+  - アクティベーションキー: 組織ID および アクティベーションキー
+
+- 参照リポジトリ 
+ 
+  CentOS 8 Stream の場合
+
+  http://ftp.riken.jp/Linux/centos/8-stream/BaseOS/x86_64/os
+
+  RHEL8 の場合
+
+  ユーザ名、パスワードを指定して Redhat CDN
+
+- ソフトウェア > インストールソース
+
+  最小限のインストール
+
+  - ゲストエージェント
+  - 標準
+
+- ユーザの設定 > rootパスワード
+
+  ユーザの作成 で管理者にチェックを入れる場合は省略可能
+
+- ユーザの設定 > ユーザの作成
+
+  このユーザを管理者にする
+
+  usermod -G wheel とほぼ同じ
+
 ## チェックリスト
 
 ```
@@ -29,7 +87,7 @@ systemctl get-default
 # サービス一覧
 systemctl list-unit-files --type service --no-pager
 # サービス一覧をタブ区切りに
-systemctl list-unit-files --type service --no-pager | sed -e "s/  \/\t/g"
+systemctl list-unit-files --type service --no-pager | sed -e "s/  */\t/g"
 
 # ディスクレイアウト
 df -h
@@ -121,3 +179,21 @@ sed -ie "s/\(SELINUX=\)enforcing/\1disabled/" /etc/selinux/config
 sudo subscription-manager status
 sudo dnf group list 
 ```
+
+## Tips
+
+- 一括サービス確認
+  ```
+  # サービス確認したいサービスをservicelist として列挙しておく
+  vi servicelist 
+  # 以下内容
+  nftables
+  firewalld
+  dhcp
+  httpd
+  chrony 
+
+  # systemctl をgrep
+  sudo systemctl list-unit-files | grep -f services 
+  ```
+

@@ -69,11 +69,12 @@ end
 
 - pcsを使って構築(以降node1)
   
+  ここではIPアドレスで認証してますが、ちゃんと双方の/etc/hosts で名前解決できるようにしましょう..
   ```
   # haclusterのID/PWで相互認証
-  sudo pcs cluster auth node1 node2
+  sudo pcs cluster auth 10.0.0.11 10.0.0.12
   # /etc/corosync/corosync.conf を自動生成できる
-  sudo pcs cluster setup --name ha_cluster node1 node2
+  sudo pcs cluster setup --name ha_cluster 10.0.0.11 10.0.0.12
   # sudo pcs cluster setup --name ha_cluster node1 address=10.0.0.11  node2 address=10.0.0.12
   cat /etc/corosync/corosync.conf
   sudo pcs cluster enable --all
@@ -88,7 +89,10 @@ end
   # VirtualOPとして10.0.0.20 を設定する
   # curl http://10.0.0.20 をノックするとhttp://10.0.0.11 の結果が返る
   sudo pcs resource create Virtual_IP ocf:heartbeat:IPaddr2 ip=10.0.0.20  cidr_netmask=24 op monitor interval=30s
-  # 
+  sudo pcs status corosync
+  # 実際に切ったり揚げたりする
+  sudo pcs standby node1
+  sudo pcs unstandby node1
   ```
 
 
