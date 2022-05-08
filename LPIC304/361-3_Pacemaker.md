@@ -95,6 +95,32 @@ end
   sudo pcs unstandby node1
   ```
 
+## ディストリごとの注意事項
+
+- Ubuntu 
+  
+  特になし  sudo apt でさくっと入る
+
+- CentOS
+
+  特段問題なし、sudo yum とか sudo dnf でさくっと入る
+
+  ```
+  # CentOS 8 Streamのとき
+  sudo dnf repolist all
+  sudo dnf install --enablerepo=ha pacemaker corosync
+  ```
+
+- RHEL8
+
+  パッケージが別
+  ```
+  subscription-manager repos --enable=rhel-8-for-x86_64-highavailability-rpms
+  sudo dnf install pcs
+  ```
+
+  別途 High Availability Add-on の契約が必要 <-ここ重要
+
 
 
 
