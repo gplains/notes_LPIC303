@@ -171,13 +171,25 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
   
   ```
 
+## プラグイン回り
+
+- java-gateway 
+
+  ```
+  # zabbixが設定されていればyum一発
+  sudo yum install zabbix-java-gateway
+  ```
+
 ## パーティショニング
 
 基本的には、前述の「Partitioning a Zabbix MySQL(8) database with Perl or Stored Procedures」を読んで進めればOK
 
 ただ、雰囲気からするとアレです
+
 60日残す設定だと「一回目のアレ」のhistory_uintも60世代作る必要がありますし
+
 history_uintが100GBくらいあると、もしかすると1時間くらいパーティショニング終わらないかも
+
 あとディスクが元のDBの2倍要るところが注意
 
 - 一回目のアレ
