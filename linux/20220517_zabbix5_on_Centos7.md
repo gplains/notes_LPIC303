@@ -209,6 +209,18 @@ history_uintが100GBくらいあると、もしかすると1時間くらいパ�
 
   先述の記事にある通り、適当な場所にperlスクリプトを配置してcronで毎日実行させること
   
+  ```
+  # 予め依存関係を解決しておく(MySQL/MariaDBどっちでもOK)
+  sudo yum install perl-DateTime perl-Sys-Syslog perl-DBI perl-DBD-mysql
+  vi mysql_zbx_part.pl
+  sudo mv mysql_zbx_part.pl /usr/share/zabbix
+  cd /usr/share/zabbix
+  chmod +x mysql_zbx_part.pl
+
+  # cron で /usr/share/zabbix/mysql_zbx_part.pl を実行する
+  sudo crontab -e 
+  ```
+
   簡単に修正箇所をまとめる(MySQL8.0の場合。MariaDBの場合は94-97行目をコメントアウト解除して、98-103行目はそのまま)
   ```
   # 12行目
@@ -229,53 +241,12 @@ history_uintが100GBくらいあると、もしかすると1時間くらいパ�
 
   Perlスクリプトに実行フラグ立ててcronで回せば、多分勝手に分割してくれるはず
 
+## バックアップどうしよ
 
-## 別サーバー(RHEL8)にZabbix6を入れてみる
+- 安直に: mysqldump -u root -p zabbix
 
-- 予め旧サーバでmysqlを実行して、ダンプして、SCPでローカルにコピー
-  ```
-  cd /tmp
-  sudo mysqldump -u root -p zabbix  --default-character-set=utf8 --database zabbix > zabbix_dump.db
-  ```
-- RHEL8を適当に(minimal)インストールして...ダンプしたイメージをインポート
-  ```
-  sudo yum install mysql-server
-  cd /etc/my.cnf.d/
-  sudo cp -p mysql-server.cnf  mysql-server.cnf.org
-  sudo vi mysql-server.cnf
-  sudo systemctl start mysqld.service
-  sudo systemctl enable mysqld.service
-  # ダンプしたdbファイルを/tmpにSCPした体で
-  cd /tmp ; pwd ; ls -l 
-  sudo mysql -uroot -p
-  sudo mysql -uroot -p zabbix > /tmp/zabbix_dump.db
-  ```
-- いつも通りZabbix6をインストール
-  
-  https://www.zabbix.com/download を参照
-  
-  (RHEL8/Ubuntu20.04なら一通り書いてある)
-  ```
-  # リポジトリ設定してインストール
-  sudo rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
-  sudo dnf remove zabbix-server-mysql zabbix-web-mysql zabbix-agent
-  sudo dnf install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-selinux-policy zabbix-agent
-  # 予めfirewalldでhttpを空けておくとoK
-  sudo firewall-cmd --permanent --add-service=http
-  sudo firewall-cmd --reload
-  # サービスを有効化
-  sudo vi /etc/zabbix/zabbix_server.conf
-  sudo systemctl restart zabbix-server zabbix-agent httpd php-fpm
-  sudo systemctl enable zabbix-server zabbix-agent httpd php-fpm
-  ```
-- http://ホストIP/zabbix にアクセスしてみる
-  
-  ウィザードに従ってぽちぽち進める
+- 安全方向に倒す場合: ZABBIXサポートに契約して、バックアップスクリプトをわけてもらう
 
-  エクスポート/インポートがアレだったのか、日本語ロケール以外だと画面が化ける(locale for language "en_us" is not found on the web server.)
+- 海外の有志のスクリプトを使う
 
-  プロファイルからロケールを日本語に変更するとおさまる...うーんうーん
-  
-
-
-
+  https://github.com/remontti/zabbix-backup
