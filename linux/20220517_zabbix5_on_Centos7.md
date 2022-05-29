@@ -14,35 +14,9 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
 
 ## 参考にしたURI
 
-- Zabbix 3.0をCentOS 7にインストール
-
-  https://qiita.com/atanaka7/items/294a639effdb804cfdaa
-
-- CentOS 8 で Zabbix5.0にアップグレード(nginx + PHP-FPM + MySQL)
-
-  https://kusoneko.blogspot.com/2020/10/centos-8-upgrade-to-zabbix5.0.html
-
-- [zabbix 4.0] アクティブチェックが失敗するときの確認点
-  
-  https://mseeeen.msen.jp/check-point-when-zabbix-active-check-fails/
-
 - Partitioning a Zabbix MySQL(8) database with Perl or Stored Procedures
   
   https://blog.zabbix.com/partitioning-a-zabbix-mysql-database-with-perl-or-stored-procedures/13531/
-
-
-## KVM親機でやること
-
-- 適当な方法でCentOS7イメージを作成する
-
-  省略...と云いたいところだが、適当なところでスナップショットを切る(VMにc7zbxとした場合)
-
-  ```
-  # スナップショット採取
-  sudo virsh snapshot-create-as --domain c7zbx --name base
-  # スナップショットに戻す
-  sudo virsh snapshot-revert --domain  c7zbx --current
-  ```
 
 ## 実際にzabbix5サーバを立てる
 
@@ -100,7 +74,7 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
   # ZABBIXのリポジトリを登録
   sudo rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm
   # /etc/yum.repos.d/zabbix.repo を修正、 frontend区を有効にする
-  sudo vi /etc/yum.repos.d/zabbix.repo 
+  # sudo vi /etc/yum.repos.d/zabbix.repo 
   ```
 
 - 適宜インストール
@@ -108,7 +82,8 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
   # リポジトリDBを更新
   sudo yum update
   # ますPHP73をインストール
-  sudo yum install zabbix-web-mysql-scl-php73  zabbix-apache-conf-scl
+  sudo yum install --enablerepo=zabbix-frontend \
+       zabbix-web-mysql-scl-php73  zabbix-apache-conf-scl
   
   # fpmの時刻設定を変更
   cd /etc/opt/rh/rh-php73/php-fpm.d/
@@ -116,7 +91,8 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
   # php_value[date.timezone] = Asia/Tokyo
   
   # ZABBIXをインストール
-  yum -y install zabbix-server-mysql zabbix-agent zabbix-web-japanese
+  sudo yum install --enablerepo=zabbix-frontend \
+       zabbix-server-mysql zabbix-agent zabbix-web-japanese
   # 設定ファイルを修正
   cd /etc/zabbix/
   sudo vi zabbix_server.conf
