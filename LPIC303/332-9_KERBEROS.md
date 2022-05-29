@@ -7,16 +7,41 @@ title:332-KERBEROS
 
 ## KERBEROS
 
-### Ubuntuの場合
+### Ubuntu 18.04/20.04の場合
 
 - インストール
   ```
-  
+  # clientのみ
+  sudo apt install krb5-user
+
+  # サーバも
+  sudo apt install krb5-kdc krb5-admin-server krb5-config 
+
   ```
 
-### CentOS7の場合
+### RHEL/CentOSの場合
 
 - インストール
   ```
+  # clientのみ
+  sudo dnf install krb5-workstation
 
+  # サーバも
+  sudo dnf install krb5-server 
   ```
+
+### 主要コマンド
+
+```
+# DB(プリンシパル)の設定
+kadmin
+
+# チケット作成
+kinit
+
+# チケット表示
+klist
+
+# チケット破棄
+kdestroy
+```

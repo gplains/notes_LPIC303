@@ -6,8 +6,53 @@ title:Firewalld
 
 厳密にはLPIC303の範囲ではないので(iptablesが範囲なので)
 
+## 設定ファイル
 
-## ZONE
+- iptables(参考)
+  /etc/sysconfig 配下
+- firewalld 
+  /etc/firewalld 
+  /usr/lib/firewalld
+
+## 基本的なコマンド
+
+- 設定確認
+  ```
+  sudo firewall-cmd --state 
+
+  sudo systemctl status firewalld
+  ```
+
+- ゾーン
+  ```
+  # ゾーン一覧
+  sudo firewall-cmd --get-zones
+  sudo firewall-cmd --lista-all-zones
+  # internalゾーンの表示
+  sudo firewall-cmd --info-zone=internal
+
+  # ゾーンを確認する
+  sudo firewall-cmd --get-default-zone
+  sudo firewall-cmd --get-active-zones
+  
+  # デフォルトのゾーンを切り替える
+  sudo firewall-cmd --set-default-zone=dmz
+  ```
+- サービス、ポート
+  ```
+  # サービスの一覧
+  sudo firewall-cmd --get-services
+  # ポートの追加
+  sudo firewall-cmd --add-port=10051/tcp
+  sudo firewall-cmd --add-port={636/tcp,637/tcp,638/udp} --permanent --zone=somezone
+  ```
+- 設定の反映
+  ```
+  # permanent で設定したルールを反映する
+  sudo firewall-cmd --reload 
+  ```
+
+## ZONEの使用の流れ
 
 特定のIP、セグメントだけ許可する場合に使える
 
