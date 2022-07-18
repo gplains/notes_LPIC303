@@ -43,11 +43,12 @@ title:CentOS7でZABBIX5をインストールする(2022/5)
   sudo grep password /var/log/mysqld.log
   
   # パスワードポリシを修正する
+  # 初期パスワード見てからmy.cnf変えないとエラーになるので先にやらないように
   sudo vi /etc/my.cnf
   # 以下の文字列を追記
-  # validate_password.policy=LOW
-  # validate_password.length=4
-  # validate_password.check_user_name=OFF
+  # validate_password_policy=LOW
+  # validate_password_length=4
+  # validate_password_check_user_name=OFF
   
   # 一回だけ再起動しておく
   sudo systemctl start mysqld.service
